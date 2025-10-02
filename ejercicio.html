@@ -3,144 +3,299 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio Técnico - Easy-Shop</title>
+    <title>Ejercicio Técnico - Easy-Shop Portal</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar-custom {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .navbar-brand, .nav-link {
-            color: white !important;
-        }
-        .container-content {
-            max-width: 1000px;
-            margin: 2rem auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .content-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        .content-body {
-            padding: 2rem;
-        }
-        .markdown-content h1, .markdown-content h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 0.5rem;
-            margin-top: 2rem;
-        }
-        .markdown-content h3 {
-            color: #34495e;
-            margin-top: 1.5rem;
-        }
-        .markdown-content pre {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        .markdown-content code {
-            background: #f8f9fa;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        .markdown-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-        }
-        .markdown-content th, .markdown-content td {
-            border: 1px solid #dee2e6;
-            padding: 0.75rem;
-            text-align: left;
-        }
-        .markdown-content th {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-        .markdown-content blockquote {
-            border-left: 4px solid #667eea;
-            background: #f8f9fa;
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-        .back-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        .back-btn:hover {
-            color: white;
-            text-decoration: none;
-            opacity: 0.9;
-        }
-    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/portal.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="menu.html">
-                <i class="fas fa-store"></i> Easy-Shop API Portal
+                <i class="fas fa-shopping-cart"></i>
+                Easy-Shop Portal
             </a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="menu.html">
-                    <i class="fas fa-home"></i> Inicio
-                </a>
-                <a class="nav-link" href="documentacion.html">
-                    <i class="fas fa-book"></i> Documentación
+                    <i class="fas fa-home"></i> Menú Principal
                 </a>
                 <a class="nav-link" href="#" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Salir
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </a>
             </div>
         </div>
     </nav>
 
-    <div class="container-content">
-        <div class="content-header">
-            <h1><i class="fas fa-code"></i> Ejercicio Técnico Live Coding</h1>
-            <p class="lead mb-0">Desarrollador Fullstack - Easy-Shop</p>
-        </div>
-        
-        <div class="content-body">
-            <a href="menu.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Volver al Menú
-            </a>
-            
-            <div class="markdown-content" id="exerciseContent">
-                <!-- El contenido del ejercicio se cargará aquí -->
-                <div class="text-center py-5">
-                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                    <p class="mt-3">Cargando ejercicio técnico...</p>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-gradient-primary text-white">
+                        <h1 class="card-title mb-0">
+                            <i class="fas fa-code"></i>
+                            Ejercicio Técnico Fullstack
+                        </h1>
+                        <p class="mb-0">Desarrolla una aplicación web que consuma nuestra API de órdenes</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Información del ejercicio -->
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Información General</h5>
+                            <ul class="mb-0">
+                                <li><strong>Empresa:</strong> Easy-Shop (E-commerce Analytics Platform)</li>
+                                <li><strong>Posición:</strong> Desarrollador Fullstack</li>
+                                <li><strong>Duración:</strong> 2-3 sesiones de 2-3 horas cada una</li>
+                                <li><strong>Modalidad:</strong> Live Coding - Evaluación en tiempo real</li>
+                            </ul>
+                        </div>
+
+                        <!-- Objetivo principal -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h3><i class="fas fa-bullseye"></i> Objetivo Principal</h3>
+                                <div class="alert alert-warning">
+                                    <strong>Desarrollar una aplicación web básica que consuma nuestra API de órdenes y muestre los datos de manera simple.</strong>
+                                    <br><small>La evaluación se centra en el proceso de desarrollo, no en el resultado final.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tareas a realizar -->
+                        <div class="row mb-4">
+                            <div class="col-lg-6">
+                                <div class="card h-100">
+                                    <div class="card-header bg-success text-white">
+                                        <h5><i class="fas fa-server"></i> Backend (Sesión 1)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6>1. Consumir API de E-commerce</h6>
+                                        <ul>
+                                            <li>Obtener token de autenticación usando credenciales básicas</li>
+                                            <li>Consumir endpoint de órdenes del marketplace</li>
+                                            <li>Implementar paginación básica</li>
+                                        </ul>
+
+                                        <h6>2. Crear Base de Datos Relacional</h6>
+                                        <ul>
+                                            <li><strong>Recomendado:</strong> PostgreSQL</li>
+                                            <li>También aceptamos: MySQL, SQLite</li>
+                                            <li>Diseñar esquema para almacenar órdenes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card h-100">
+                                    <div class="card-header bg-info text-white">
+                                        <h5><i class="fas fa-laptop-code"></i> Frontend (Sesión 2)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6>3. Construir Backend API</h6>
+                                        <ul>
+                                            <li><strong>Recomendado:</strong> Node.js con Express</li>
+                                            <li>También aceptamos: Python, PHP, Java</li>
+                                            <li>Endpoints para servir datos al frontend</li>
+                                        </ul>
+
+                                        <h6>4. Desarrollar Frontend</h6>
+                                        <ul>
+                                            <li><strong>Recomendado:</strong> Angular</li>
+                                            <li>También aceptamos: React, Vue, vanilla JS</li>
+                                            <li>Dashboard con visualización de órdenes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dashboard requerido -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-dark text-white">
+                                        <h5><i class="fas fa-chart-bar"></i> Dashboard Requerido (Sesión 3)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Funcionalidades Principales:</h6>
+                                                <ul>
+                                                    <li>Tabla con listado de órdenes</li>
+                                                    <li>Modal con detalles de cada orden</li>
+                                                    <li>Filtros por plataforma (Amazon, eBay, Etsy)</li>
+                                                    <li>Búsqueda por email o ID de orden</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Gráficos Requeridos:</h6>
+                                                <ul>
+                                                    <li><strong>Gráficos de barras horizontales</strong></li>
+                                                    <li>Filtrado por día específico</li>
+                                                    <li>Agrupado por plataforma de venta</li>
+                                                    <li>Mostrar totales de ventas por plataforma</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Credenciales de API -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card border-warning">
+                                    <div class="card-header bg-warning">
+                                        <h5><i class="fas fa-key"></i> Credenciales de API</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Autenticación Basic Auth:</h6>
+                                                <ul>
+                                                    <li><strong>Usuario:</strong> <code>api_client</code></li>
+                                                    <li><strong>Contraseña:</strong> <code>SecurePass2024!</code></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Endpoints de API:</h6>
+                                                <ul>
+                                                    <li><strong>Token:</strong> <code>POST /api/auth/token</code></li>
+                                                    <li><strong>Órdenes:</strong> <code>GET /api/orders</code></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success mt-3">
+                                            <strong>Base URL:</strong> <code>https://pruebas-api-l4yu.onrender.com</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Criterios de evaluación -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5><i class="fas fa-star"></i> Criterios de Evaluación</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h6>Proceso de Desarrollo (40%)</h6>
+                                                <ul>
+                                                    <li>Planificación y explicación</li>
+                                                    <li>Desarrollo iterativo</li>
+                                                    <li>Capacidad de debugging</li>
+                                                    <li>Comunicación durante el código</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Habilidades Técnicas (35%)</h6>
+                                                <ul>
+                                                    <li>Código funcional básico</li>
+                                                    <li>Sintaxis correcta</li>
+                                                    <li>Estructura del proyecto</li>
+                                                    <li>Uso de herramientas</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Resolución de Problemas (25%)</h6>
+                                                <ul>
+                                                    <li>Análisis de requisitos</li>
+                                                    <li>Adaptación a errores</li>
+                                                    <li>Uso de recursos externos</li>
+                                                    <li>Persistencia ante dificultades</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entregables mínimos -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-success">
+                                    <h5><i class="fas fa-check-circle"></i> Entregables Mínimos</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Funcionalidad Básica:</h6>
+                                            <ul>
+                                                <li>✅ Obtener token de la API</li>
+                                                <li>✅ Obtener al menos 10 órdenes</li>
+                                                <li>✅ Mostrarlas en interfaz web</li>
+                                                <li>✅ Explicar funcionamiento del código</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Extras (Si hay tiempo):</h6>
+                                            <ul>
+                                                <li>⭐ Filtros por plataforma</li>
+                                                <li>⭐ Búsqueda básica</li>
+                                                <li>⭐ Gráficos simples</li>
+                                                <li>⭐ Estilos CSS</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enlaces útiles -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info text-white">
+                                        <h5><i class="fas fa-external-link-alt"></i> Enlaces Útiles</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Documentación:</h6>
+                                                <ul>
+                                                    <li><a href="documentacion.html" target="_blank">📖 Documentación Completa de la API</a></li>
+                                                    <li><a href="https://www.chartjs.org/" target="_blank">📊 Chart.js para gráficos</a></li>
+                                                    <li><a href="https://getbootstrap.com/" target="_blank">🎨 Bootstrap para estilos</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Herramientas Recomendadas:</h6>
+                                                <ul>
+                                                    <li><a href="https://www.postman.com/" target="_blank">📡 Postman para probar API</a></li>
+                                                    <li><a href="https://developer.mozilla.org/" target="_blank">📚 MDN Web Docs</a></li>
+                                                    <li><a href="https://nodejs.org/" target="_blank">🟢 Node.js para backend</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje final -->
+                        <div class="text-center mt-4">
+                            <div class="alert alert-primary">
+                                <h5><i class="fas fa-rocket"></i> ¡No te preocupes por la perfección!</h5>
+                                <p class="mb-0">Lo importante es ver cómo piensas y resuelves problemas en tiempo real. 
+                                Este ejercicio simula el día a día en Easy-Shop: consumir APIs, mostrar datos y iterar rápido.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript del portal -->
     <script src="js/auth.js"></script>
     <script src="js/ejercicio.js"></script>
 </body>
