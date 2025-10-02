@@ -4,7 +4,6 @@
 
 **Empresa:** Easy-Shop (E-commerce Analytics Platform)  
 **Posición:** Desarrollador Fullstack  
-**Duración:** 2-3 sesiones de 2-3 horas cada una (4-9 horas total)  
 **Modalidad:** Live Coding - Evaluación en tiempo real  
 
 ---
@@ -27,7 +26,7 @@ Desarrollar una aplicación web básica que consuma nuestra API de órdenes y mu
 
 ### Backend
 - **Lenguaje:** Python (Flask/FastAPI) | Node.js (Express) | PHP
-- **Base de datos:** SQLite (simple) o variables en memoria
+- **Base de datos:** Solo bases relacionales (PostgreSQL recomendado), también puedes usar MySQL o SQLite para pruebas simples
 - **HTTP Client:** requests/axios/curl
 
 ### Frontend  
@@ -47,12 +46,6 @@ Desarrollar una aplicación web básica que consuma nuestra API de órdenes y mu
 - Crear endpoint simple para autenticación
 - Manejar respuestas de error básicas
 
-**Credenciales API:**
-```
-Usuario: api_client
-Password: SecurePass2024!
-URL Token: https://pruebas-api-l4yu.onrender.com/api/auth/token
-```
 
 **2. 📥 Consumo de Órdenes**
 - Obtener lista de órdenes desde la API externa
