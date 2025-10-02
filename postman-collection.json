@@ -1,0 +1,540 @@
+{
+  "info": {
+    "name": "Ecommerce API v1.0.0",
+    "description": "Collection completa para la API de Ecommerce con autenticación JWT, gestión de órdenes y productos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "ecommerce-api-collection",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Autenticación",
+      "item": [
+        {
+          "name": "Generar Token JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.success && response.data.access_token) {",
+                  "        pm.collectionVariables.set('token', response.data.access_token);",
+                  "        pm.test('Token generado exitosamente', () => {",
+                  "            pm.expect(response.success).to.be.true;",
+                  "        });",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/token",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "token"]
+            },
+            "description": "Genera un nuevo token JWT válido por 30 minutos"
+          }
+        },
+        {
+          "name": "Verificar Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/verify",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify"]
+            },
+            "description": "Verifica la validez del token actual"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Órdenes",
+      "item": [
+        {
+          "name": "Obtener Todas las Órdenes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            },
+            "description": "Obtiene todas las órdenes con paginación por defecto"
+          }
+        },
+        {
+          "name": "Filtrar Órdenes por Plataforma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders?plataforma=AMAZON&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "plataforma",
+                  "value": "AMAZON"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Filtra órdenes por plataforma específica"
+          }
+        },
+        {
+          "name": "Filtrar Órdenes por Fecha",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders?fecha_inicial=2025-01-01&fecha_final=2025-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "fecha_inicial",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "fecha_final",
+                  "value": "2025-12-31"
+                }
+              ]
+            },
+            "description": "Filtra órdenes por rango de fechas"
+          }
+        },
+        {
+          "name": "Buscar Orden por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders?id_venta=1",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "id_venta",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Busca una orden específica por su ID"
+          }
+        },
+        {
+          "name": "Actualizar Estado de Orden",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"enviado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1"]
+            },
+            "description": "Actualiza el estado de una orden. Estados válidos: pendiente, procesando, enviado, entregado, cancelado"
+          }
+        },
+        {
+          "name": "Exportar Órdenes (Excel Format)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders/excel?limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "excel"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Obtiene órdenes en formato plano para exportación a Excel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ Productos",
+      "item": [
+        {
+          "name": "Obtener Todos los Productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products",
+              "host": ["{{base_url}}"],
+              "path": ["products"]
+            },
+            "description": "Obtiene todos los productos con paginación"
+          }
+        },
+        {
+          "name": "Buscar Productos por Nombre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?nombre=laptop&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Busca productos por nombre (búsqueda parcial)"
+          }
+        },
+        {
+          "name": "Buscar Producto por SKU Específico",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?sku=SKU001",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "sku",
+                  "value": "SKU001"
+                }
+              ]
+            },
+            "description": "Busca productos por SKU específico"
+          }
+        },
+        {
+          "name": "Obtener Producto por SKU (Endpoint directo)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/SKU001",
+              "host": ["{{base_url}}"],
+              "path": ["products", "SKU001"]
+            },
+            "description": "Obtiene un producto específico usando su SKU como parámetro de URL"
+          }
+        },
+        {
+          "name": "Actualizar Producto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo nombre del producto\",\n  \"descripcion\": \"Nueva descripción actualizada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/SKU001",
+              "host": ["{{base_url}}"],
+              "path": ["products", "SKU001"]
+            },
+            "description": "Actualiza el nombre y/o descripción de un producto por SKU"
+          }
+        },
+        {
+          "name": "Productos con Paginación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?limit=10&offset=10",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Ejemplo de paginación: página 2 con 10 productos por página"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 Utilidades",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica el estado de salud de la API"
+          }
+        },
+        {
+          "name": "Información de la API",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Obtiene información general y documentación de la API"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 Ejemplos de Casos de Uso",
+      "item": [
+        {
+          "name": "Flujo Completo: Token + Consulta + Actualización",
+          "item": [
+            {
+              "name": "1. Generar Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    const response = pm.response.json();",
+                      "    pm.collectionVariables.set('token', response.data.access_token);",
+                      "    console.log('Token guardado para uso en siguientes peticiones');",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/auth/token",
+                  "host": ["{{base_url}}"],
+                  "path": ["auth", "token"]
+                }
+              }
+            },
+            {
+              "name": "2. Consultar Órdenes Recientes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/orders?limit=5",
+                  "host": ["{{base_url}}"],
+                  "path": ["orders"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "5"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "3. Actualizar Primera Orden",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estado\": \"procesando\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/orders/1",
+                  "host": ["{{base_url}}"],
+                  "path": ["orders", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reporte Diario de Órdenes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders?fecha_inicial=2025-10-01&fecha_final=2025-10-01",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "fecha_inicial",
+                  "value": "2025-10-01",
+                  "description": "Cambiar por fecha actual"
+                },
+                {
+                  "key": "fecha_final",
+                  "value": "2025-10-01",
+                  "description": "Cambiar por fecha actual"
+                }
+              ]
+            },
+            "description": "Obtiene todas las órdenes del día actual (cambiar fechas según necesidad)"
+          }
+        },
+        {
+          "name": "Análisis por Plataforma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/orders?plataforma=AMAZON&fecha_inicial=2025-09-01",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "plataforma",
+                  "value": "AMAZON"
+                },
+                {
+                  "key": "fecha_inicial",
+                  "value": "2025-09-01"
+                }
+              ]
+            },
+            "description": "Analiza órdenes de una plataforma específica desde una fecha determinada"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta antes de cada petición",
+          "console.log('🚀 Ejecutando petición a:', pm.request.url);",
+          "",
+          "// Verificar si el token está configurado para peticiones protegidas", 
+          "const authHeader = pm.request.headers.find(h => h.key === 'Authorization');",
+          "if (pm.collectionVariables.get('token') && !authHeader) {",
+          "    console.log('📝 Token disponible para autenticación');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script que se ejecuta después de cada petición",
+          "console.log('📥 Respuesta recibida:', pm.response.status, pm.response.code);",
+          "",
+          "// Tests globales",
+          "pm.test('Response time is less than 5000ms', () => {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "if (pm.response.code === 200) {",
+          "    pm.test('Response has success field', () => {",
+          "        const response = pm.response.json();",
+          "        pm.expect(response).to.have.property('success');",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

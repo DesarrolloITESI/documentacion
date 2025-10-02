@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Ecommerce - Documentación Completa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Navbar personalizada */
+        .navbar-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            color: rgba(255,255,255,0.8) !important;
+        }
+        
+        /* Estilos para impresión - Ocultar headers y footers del navegador */
+        @page {
+            margin: 20mm;
+            size: A4;
+            @top-left { content: ""; }
+            @top-center { content: ""; }
+            @top-right { content: ""; }
+            @bottom-left { content: ""; }
+            @bottom-center { content: ""; }
+            @bottom-right { content: ""; }
+        }
+        
+        @media print {
+            .navbar { display: none !important; }
+            body { 
+                margin: 0; 
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            /* Forzar saltos de página en secciones principales */
+            .section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            .endpoint {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #007bff;
+        }
+        
+        .header h1 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: #007bff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .toc a:hover {
+            background-color: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        h2 {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        
+        .method.get { background: #28a745; color: white; }
+        .method.post { background: #007bff; color: white; }
+        .method.put { background: #ffc107; color: black; }
+        .method.delete { background: #dc3545; color: white; }
+        
+        .url {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        /* Syntax highlighting para JSON */
+        .json-key {
+            color: #90cdf4;
+            font-weight: bold;
+        }
+        
+        .json-string {
+            color: #68d391;
+        }
+        
+        .json-number {
+            color: #f687b3;
+        }
+        
+        .json-boolean {
+            color: #fbb6ce;
+        }
+        
+        .json-null {
+            color: #a0aec0;
+        }
+        
+        .json-punctuation {
+            color: #e2e8f0;
+        }
+
+        /* Estilos para tabs de ejemplos */
+        .example-tabs {
+            margin: 20px 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 0;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-button {
+            background: #e9ecef;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+            border-right: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-button:last-child {
+            border-right: none;
+        }
+
+        .tab-button:hover {
+            background: #f8f9fa;
+            color: #007bff;
+        }
+
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            background: #2d3748;
+            margin: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content .code {
+            margin: 0;
+            border-radius: 0 0 8px 8px;
+            position: relative;
+        }
+
+        /* Botón de copiar */
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: #2d3748;
+            transform: scale(1.05);
+        }
+
+        /* Iconos para los tabs */
+        .tab-icon {
+            font-size: 16px;
+        }
+        
+        .tab-icon img {
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+            margin-right: 2px;
+        }        .code .comment {
+            color: #68d391;
+        }
+        
+        .code .string {
+            color: #fbb6ce;
+        }
+        
+        .code .keyword {
+            color: #63b3ed;
+        }
+        
+        .response {
+            background: #f0f4f8;
+            border: 1px solid #cbd5e0;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .response h4 {
+            margin-top: 0;
+            color: #2d3748;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .parameter {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="menu.html">
+                <i class="fas fa-store"></i> Easy-Shop API Portal
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="menu.html">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a class="nav-link" href="ejercicio.html">
+                    <i class="fas fa-code"></i> Ejercicio
+                </a>
+                <a class="nav-link" href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 20px;">
+        <div class="bg-white p-4 rounded shadow">
+            <div class="header">
+            <h1>🛒 API Ecommerce</h1>
+            <div class="subtitle">Documentación Completa para Desarrolladores</div>
+            <div style="margin-top: 15px; color: #6c757d;">
+                <strong>Versión:</strong> 1.0.0 &nbsp;|&nbsp; 
+                <strong>Fecha:</strong> Octubre 2025 &nbsp;|&nbsp; 
+                <strong>Protocolo:</strong> REST API
+            </div>
+        </div>
+
+        <div class="toc">
+            <h2>📋 Tabla de Contenido</h2>
+            <ul>
+                <li><a href="#introduccion">1. Introducción</a></li>
+                <li><a href="#configuracion">2. Configuración Inicial</a></li>
+                <li><a href="#autenticacion">3. Autenticación</a></li>
+                <li><a href="#ejemplos-produccion">3.5. Ejemplos con Producción</a></li>
+                <li><a href="#endpoints-ordenes">4. Endpoints de Órdenes</a></li>
+                <li><a href="#endpoints-productos">5. Endpoints de Productos</a></li>
+                <li><a href="#filtros">6. Filtros y Parámetros</a></li>
+                <li><a href="#ejemplos">7. Ejemplos Prácticos</a></li>
+                <li><a href="#errores">8. Manejo de Errores</a></li>
+                <li><a href="#testing">9. Herramientas de Prueba</a></li>
+            </ul>
+        </div>
+
+        <section id="introduccion">
+            <h2>1. 📖 Introducción</h2>
+            <p>La <strong>API Ecommerce</strong> es una interfaz RESTful diseñada para gestionar órdenes y productos en plataformas de comercio electrónico. Proporciona funcionalidades completas para:</p>
+            <ul>
+                <li>🔐 <strong>Autenticación segura</strong> con tokens JWT</li>
+                <li>📦 <strong>Gestión de órdenes</strong> con filtros avanzados</li>
+                <li>🛍️ <strong>Administración de productos</strong> por SKU</li>
+                <li>📊 <strong>Exportación de datos</strong> a diferentes formatos</li>
+                <li>🔒 <strong>Seguridad integrada</strong> con rate limiting</li>
+            </ul>
+
+            <div class="info">
+                <strong>🌐 URL Base:</strong> <code>https://pruebas-api-l4yu.onrender.com/api</code><br>
+                <strong>📋 Formato:</strong> JSON<br>
+                <strong>🔑 Autenticación:</strong> Bearer Token (JWT) + Basic Auth para tokens<br>
+                <strong>⏱️ Rate Limit:</strong> <span style="color: #e74c3c; font-weight: bold;">1 petición por segundo por IP</span>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ IMPORTANTE - Rate Limiting:</strong>
+                <ul>
+                    <li>🚫 <strong>Máximo 1 petición por segundo por dirección IP</strong></li>
+                    <li>⏱️ Si excedes este límite, recibirás <strong>HTTP 429 (Too Many Requests)</strong></li>
+                    <li>🔄 Espera al menos <strong>1.1 segundos</strong> entre peticiones</li>
+                    <li>🤖 Para scripts automáticos, implementa delays apropiados</li>
+                    <li>📊 En producción, contacta al administrador para límites específicos</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="configuracion">
+            <h2>2. ⚙️ Configuración Inicial</h2>
+            
+            <h3>📋 Requisitos Previos</h3>
+            <ul>
+                <li>✅ <strong>API en Producción:</strong> <code>https://pruebas-api-l4yu.onrender.com</code></li>
+                <li>🔧 <strong>Credenciales Basic Auth:</strong> Para generar tokens de acceso</li>
+                <li>🛠️ <strong>Herramienta HTTP:</strong> cURL, Postman, o biblioteca de tu lenguaje preferido</li>
+                <li>🔑 <strong>Token JWT:</strong> Válido por 30 minutos después de la generación</li>
+            </ul>
+
+            <h3>🔧 Headers Requeridos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Valor</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="parameter">Content-Type</span></td>
+                        <td>application/json</td>
+                        <td>Para peticiones con body (POST, PUT)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="parameter">Authorization</span></td>
+                        <td>Bearer {token}</td>
+                        <td>Token JWT para endpoints protegidos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="autenticacion" class="page-break">
+            <h2>3. 🔐 Autenticación</h2>
+            
+            <p>La API utiliza un sistema de <strong>doble autenticación</strong>:</p>
+            
+            <div class="info">
+                <strong>🔐 Paso 1:</strong> <strong>Basic Auth</strong> para obtener tokens<br>
+                <strong>🎫 Paso 2:</strong> <strong>Bearer JWT</strong> para acceder a los endpoints
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ IMPORTANTE - Credenciales Basic Auth:</strong>
+                <ul>
+                    <li>📝 <strong>Formato:</strong> Basic base64(usuario:contraseña)</li>
+                    <li>⏱️ <strong>Tokens JWT:</strong> Válidos por 30 minutos</li>
+                </ul>
+            </div>
+
+            <div class="endpoint">
+                <h3>🔑 Obtener Token de Acceso</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="url">/api/auth/token</span>
+                </div>
+                <p><strong>Descripción:</strong> Genera un nuevo token de acceso JWT válido por 30 minutos. <strong>Requiere autenticación básica.</strong></p>
+                
+                <h4>📤 Petición</h4>
+                <div class="example-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchTab(event, 'auth-curl')">
+                            <span class="tab-icon">🌐</span> cURL
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'auth-nodejs')">
+                            <span class="tab-icon"><img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Node.js"></span> Node.js
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'auth-python')">
+                            <span class="tab-icon"><img src="https://e7.pngegg.com/pngimages/119/113/png-clipart-computer-icons-python-programming-language-others-miscellaneous-angle.png" alt="Python"></span> Python
+                        </button>
+                    </div>
+                    
+                    <div id="auth-curl" class="tab-content active">
+                        <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+curl -X POST -u "api_client:SecurePass2024!" \
+     https://pruebas-api-l4yu.onrender.com/api/auth/token
+                        </div>
+                    </div>
+                    
+                    <div id="auth-nodejs" class="tab-content">
+                        <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment">// Obtener token de autenticación</span>
+const axios = require('axios');
+
+try {
+  const response = await axios.post('https://pruebas-api-l4yu.onrender.com/api/auth/token');
+  const token = response.data.data.access_token;
+  
+  console.log('Token obtenido:', token);
+  
+  // Usar el token en peticiones posteriores
+  const config = {
+    headers: { 'Authorization': `Bearer ${token}` }
+  };
+  
+} catch (error) {
+  console.error('Error obteniendo token:', error.response?.data);
+}
+                        </div>
+                    </div>
+                    
+                    <div id="auth-python" class="tab-content">
+                        <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment"># Obtener token de autenticación</span>
+import requests
+
+try:
+    response = requests.post('https://pruebas-api-l4yu.onrender.com/api/auth/token')
+    response.raise_for_status()
+    
+    token = response.json()['data']['access_token']
+    print(f'Token obtenido: {token}')
+    
+    # Usar el token en peticiones posteriores
+    headers = {'Authorization': f'Bearer {token}'}
+    
+except requests.exceptions.RequestException as e:
+    print(f'Error obteniendo token: {e}')
+                        </div>
+                    </div>
+                </div>
+
+                <h4>📥 Respuesta Exitosa</h4>
+                <div class="response">
+                    <div class="code">
+{
+  "success": true,
+  "message": "Token de acceso generado exitosamente",
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "token_type": "Bearer",
+    "expires_in": 1800,
+    "expires_at": "2025-10-01T05:30:00.000Z",
+    "scope": "api_access"
+  }
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3>✅ Verificar Token</h3>
+                <div>
+                    <span class="method post">POST</span>
+                    <span class="url">/api/auth/verify</span>
+                </div>
+                <p><strong>Descripción:</strong> Verifica la validez de un token existente.</p>
+                
+                <h4>📤 Petición</h4>
+                <div class="code">
+curl -X POST \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  https://pruebas-api-l4yu.onrender.com/api/auth/verify
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Importante:</strong> 
+                <ul>
+                    <li>Guarda el token de forma segura</li>
+                    <li>Los tokens expiran cada 30 minutos</li>
+                    <li>Genera un nuevo token antes de que expire el actual</li>
+                    <li>No compartas tokens entre diferentes usuarios</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="ejemplos-produccion" class="page-break">
+            <h2>3.5. 🌐 Ejemplos con URL de Producción</h2>
+            
+            <div class="info">
+                <strong>🚀 Prueba la API en producción:</strong> Usa la URL <code>https://pruebas-api-l4yu.onrender.com/api</code>
+            </div>
+
+            <h3>🔑 Obtener Token en Producción</h3>
+            <div class="example-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab(event, 'prod-auth-curl')">
+                        <span class="tab-icon">🌐</span> cURL
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'prod-auth-nodejs')">
+                        <span class="tab-icon"><img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Node.js"></span> Node.js
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'prod-auth-python')">
+                        <span class="tab-icon"><img src="https://e7.pngegg.com/pngimages/119/113/png-clipart-computer-icons-python-programming-language-others-miscellaneous-angle.png" alt="Python"></span> Python
+                    </button>
+                </div>
+                
+                <div id="prod-auth-curl" class="tab-content active">
+                    <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+curl -X POST -u "api_client:SecurePass2024!" \
+     https://pruebas-api-l4yu.onrender.com/api/auth/token
+                    </div>
+                </div>
+                
+                <div id="prod-auth-nodejs" class="tab-content">
+                    <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment">// Obtener token en producción con Basic Auth</span>
+const axios = require('axios');
+
+try {
+  const response = await axios.post(
+    'https://pruebas-api-l4yu.onrender.com/api/auth/token',
+    {},
+    {
+      auth: {
+        username: 'api_client',
+        password: 'SecurePass2024!'
+      }
+    }
+  );
+  const token = response.data.data.access_token;
+  console.log('Token:', token);
+} catch (error) {
+  console.error('Error:', error.response?.data || error.message);
+}
+                    </div>
+                </div>
+                
+                <div id="prod-auth-python" class="tab-content">
+                    <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment"># Obtener token en producción con Basic Auth</span>
+import requests
+from requests.auth import HTTPBasicAuth
+
+try:
+    response = requests.post(
+        'https://pruebas-api-l4yu.onrender.com/api/auth/token',
+        auth=HTTPBasicAuth('api_client', 'SecurePass2024!')
+    )
+    response.raise_for_status()
+    token = response.json()['data']['access_token']
+    print(f'Token: {token}')
+except requests.exceptions.RequestException as e:
+    print(f'Error: {e}')
+                    </div>
+                </div>
+            </div>
+
+            <h3>📊 Consultar Datos en Producción</h3>
+            <div class="example-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab(event, 'prod-data-curl')">
+                        <span class="tab-icon">🌐</span> cURL
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'prod-data-nodejs')">
+                        <span class="tab-icon"><img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Node.js"></span> Node.js
+                    </button>
+                </div>
+                
+                <div id="prod-data-curl" class="tab-content active">
+                    <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment"># Obtener órdenes en producción</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     "https://pruebas-api-l4yu.onrender.com/api/orders?limit=5"
+
+<span class="comment"># Obtener productos en producción</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     "https://pruebas-api-l4yu.onrender.com/api/products?limit=5"
+
+<span class="comment"># Verificar salud del API</span>
+curl "https://pruebas-api-l4yu.onrender.com/api/health"
+                    </div>
+                </div>
+                
+                <div id="prod-data-nodejs" class="tab-content">
+                    <div class="code">
+<button class="copy-button" onclick="copyCode(this)">📋 Copiar</button>
+<span class="comment">// Ejemplo completo en producción con Basic Auth</span>
+const axios = require('axios');
+
+const BASE_URL = 'https://pruebas-api-l4yu.onrender.com/api';
+
+async function testProduction() {
+  try {
+    <span class="comment">// 1. Obtener token con Basic Auth</span>
+    const authResponse = await axios.post(
+      `${BASE_URL}/auth/token`,
+      {},
+      {
+        auth: {
+          username: 'api_client',
+          password: 'SecurePass2024!'
+        }
+      }
+    );
+    const token = authResponse.data.data.access_token;
+    
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    
+    <span class="comment">// 2. Obtener órdenes</span>
+    const orders = await axios.get(`${BASE_URL}/orders?limit=5`, config);
+    console.log('Órdenes:', orders.data);
+    
+    <span class="comment">// 3. Obtener productos</span>
+    const products = await axios.get(`${BASE_URL}/products?limit=5`, config);
+    console.log('Productos:', products.data);
+    
+  } catch (error) {
+    console.error('Error:', error.response?.data || error.message);
+  }
+}
+
+testProduction();
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="endpoints-ordenes" class="page-break">
+            <h2>4. 📦 Endpoints de Órdenes</h2>
+            
+            <div class="endpoint">
+                <h3>📋 Obtener Órdenes</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="url">/api/orders</span>
+                </div>
+                <p><strong>Descripción:</strong> Obtiene una lista de órdenes con sus detalles completos. Soporta filtros avanzados y paginación.</p>
+                
+                <h4>🔧 Parámetros de Query (Opcionales)</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="parameter">id_venta</span></td>
+                            <td>number</td>
+                            <td>ID específico de la venta</td>
+                            <td>123</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">fecha_inicial</span></td>
+                            <td>date</td>
+                            <td>Fecha de inicio (ISO 8601)</td>
+                            <td>2025-01-01</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">fecha_final</span></td>
+                            <td>date</td>
+                            <td>Fecha de fin (ISO 8601)</td>
+                            <td>2025-01-31</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">plataforma</span></td>
+                            <td>string</td>
+                            <td>Plataforma de venta</td>
+                            <td>AMAZON, WALMART, LIVERPOOL, MELI, SEARS</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">limit</span></td>
+                            <td>number</td>
+                            <td>Número máximo de resultados</td>
+                            <td>50 (defecto)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">offset</span></td>
+                            <td>number</td>
+                            <td>Número de registros a omitir</td>
+                            <td>0 (defecto)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📤 Ejemplos de Peticiones</h4>
+                <div class="example-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchTab(event, 'orders-curl')">
+                            <span class="tab-icon">🌐</span> cURL
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'orders-nodejs')">
+                            <span class="tab-icon"><img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Node.js"></span> Node.js
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'orders-python')">
+                            <span class="tab-icon"><img src="https://e7.pngegg.com/pngimages/119/113/png-clipart-computer-icons-python-programming-language-others-miscellaneous-angle.png" alt="Python"></span> Python
+                        </button>
+                    </div>
+                    
+                    <div id="orders-curl" class="tab-content active">
+                        <div class="code">
+<span class="comment"># Obtener todas las órdenes</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  https://pruebas-api-l4yu.onrender.com/api/orders
+
+<span class="comment"># Filtrar por plataforma</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?plataforma=AMAZON"
+
+<span class="comment"># Filtrar por rango de fechas</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?fecha_inicial=2025-01-01&fecha_final=2025-01-31"
+
+<span class="comment"># Paginación</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?limit=10&offset=20"
+                        </div>
+                    </div>
+                    
+                    <div id="orders-nodejs" class="tab-content">
+                        <div class="code">
+<span class="comment">// Obtener todas las órdenes</span>
+const axios = require('axios');
+
+const config = {
+  headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+};
+
+// Petición básica
+const response = await axios.get('https://pruebas-api-l4yu.onrender.com/api/orders', config);
+
+// Filtrar por plataforma
+const amazonOrders = await axios.get(
+  'https://pruebas-api-l4yu.onrender.com/api/orders?plataforma=AMAZON', 
+  config
+);
+
+// Filtrar por rango de fechas
+const dateFilteredOrders = await axios.get(
+  'https://pruebas-api-l4yu.onrender.com/api/orders?fecha_inicial=2025-01-01&fecha_final=2025-01-31',
+  config
+);
+
+// Paginación
+const paginatedOrders = await axios.get(
+  'https://pruebas-api-l4yu.onrender.com/api/orders?limit=10&offset=20',
+  config
+);
+
+console.log(response.data);
+                        </div>
+                    </div>
+                    
+                    <div id="orders-python" class="tab-content">
+                        <div class="code">
+<span class="comment"># Obtener todas las órdenes</span>
+import requests
+
+headers = {'Authorization': 'Bearer YOUR_TOKEN'}
+base_url = 'https://pruebas-api-l4yu.onrender.com/api'
+
+# Petición básica
+response = requests.get(f'{base_url}/orders', headers=headers)
+
+# Filtrar por plataforma
+amazon_orders = requests.get(
+    f'{base_url}/orders?plataforma=AMAZON', 
+    headers=headers
+)
+
+# Filtrar por rango de fechas
+date_filtered = requests.get(
+    f'{base_url}/orders?fecha_inicial=2025-01-01&fecha_final=2025-01-31',
+    headers=headers
+)
+
+# Paginación
+paginated_orders = requests.get(
+    f'{base_url}/orders?limit=10&offset=20',
+    headers=headers
+)
+
+print(response.json())
+                        </div>
+                    </div>
+                </div>
+
+                <h4>📥 Respuesta Exitosa</h4>
+                <div class="response">
+                    <div class="code">
+{
+  "success": true,
+  "message": "Órdenes obtenidas exitosamente",
+  "data": [
+    {
+      "id_venta": 10,
+      "fecha": "2025-09-30T16:45:00.000Z",
+      "plataforma": "AMAZON",
+      "total": "1500.00",
+      "estado": "COMPLETADA",
+      "detalle": [
+        {
+          "id_detalle": 10,
+          "sku": "SKU010",
+          "cantidad": 1,
+          "precio_unitario": "1500.00",
+          "subtotal": "1500.00",
+          "producto": {
+            "nombre": "Producto 10",
+            "descripcion": "Descripción del producto 10"
+          }
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalCount": 250,
+    "limit": 50,
+    "offset": 0,
+    "hasNext": true,
+    "hasPrevious": false,
+    "nextOffset": 50,
+    "previousOffset": null
+  },
+  "filters": {
+    "limit": 50,
+    "offset": 0,
+    "plataforma": "AMAZON"
+  }
+}
+                    </div>
+                </div>
+
+                <div class="info">
+                    <h4>📊 Información de Paginación</h4>
+                    <ul>
+                        <li><strong>currentPage:</strong> Página actual (basada en offset/limit)</li>
+                        <li><strong>totalPages:</strong> Total de páginas disponibles</li>
+                        <li><strong>totalCount:</strong> Total de órdenes que cumplen los filtros</li>
+                        <li><strong>hasNext/hasPrevious:</strong> Indica si hay página siguiente/anterior</li>
+                        <li><strong>nextOffset/previousOffset:</strong> Valores de offset para navegación</li>
+                    </ul>
+                    
+                    <h4>💡 Consejos de Paginación</h4>
+                    <ul>
+                        <li>🔢 <strong>Límite máximo:</strong> 100 registros por petición</li>
+                        <li>📄 <strong>Por defecto:</strong> 50 registros por página</li>
+                        <li>⏩ <strong>Navegación:</strong> Usa nextOffset/previousOffset para navegar</li>
+                        <li>🎯 <strong>Rendimiento:</strong> Usa filtros específicos para reducir el total</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3>🔄 Actualizar Estado de Orden</h3>
+                <div>
+                    <span class="method put">PUT</span>
+                    <span class="url">/api/orders/{id_venta}</span>
+                </div>
+                <p><strong>Descripción:</strong> Actualiza el estado de una orden específica.</p>
+                
+                <h4>🎯 Parámetros de URL</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="parameter">id_venta</span></td>
+                            <td>number</td>
+                            <td>ID único de la venta a actualizar</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📋 Body de la Petición</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Tipo</th>
+                            <th>Requerido</th>
+                            <th>Valores Permitidos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="parameter">estado</span></td>
+                            <td>string</td>
+                            <td>Sí</td>
+                            <td>pendiente, procesando, enviado, entregado, cancelado</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📤 Ejemplo de Petición</h4>
+                <div class="code">
+curl -X PUT \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"estado": "enviado"}' \
+  https://pruebas-api-l4yu.onrender.com/api/orders/123
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3>📊 Exportar Órdenes</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="url">/api/orders/excel</span>
+                </div>
+                <p><strong>Descripción:</strong> Obtiene los datos de órdenes en formato plano para exportación (sin JSON anidado).</p>
+                
+                <h4>📤 Ejemplo de Petición</h4>
+                <div class="code">
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders/excel?limit=100"
+                </div>
+                
+                <div class="info">
+                    <strong>💡 Nota:</strong> Este endpoint devuelve los datos en estructura plana, ideal para generar reportes en Excel o CSV. Acepta los mismos filtros que el endpoint principal de órdenes.
+                </div>
+            </div>
+        </section>
+
+        <section id="endpoints-productos" class="page-break">
+            <h2>5. 🛍️ Endpoints de Productos</h2>
+            
+            <div class="endpoint">
+                <h3>📋 Obtener Productos</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="url">/api/products</span>
+                </div>
+                <p><strong>Descripción:</strong> Obtiene una lista de productos con filtros opcionales y paginación.</p>
+                
+                <h4>🔧 Parámetros de Query (Opcionales)</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="parameter">sku</span></td>
+                            <td>string</td>
+                            <td>SKU específico del producto</td>
+                            <td>SKU001</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">nombre</span></td>
+                            <td>string</td>
+                            <td>Búsqueda por nombre (parcial)</td>
+                            <td>laptop</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">limit</span></td>
+                            <td>number</td>
+                            <td>Número máximo de resultados</td>
+                            <td>50 (defecto)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">offset</span></td>
+                            <td>number</td>
+                            <td>Número de registros a omitir</td>
+                            <td>0 (defecto)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📤 Ejemplos de Peticiones</h4>
+                <div class="example-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" onclick="switchTab(event, 'products-curl')">
+                            <span class="tab-icon">🌐</span> cURL
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'products-nodejs')">
+                            <span class="tab-icon"><img src="https://cdn-icons-png.flaticon.com/512/919/919825.png" alt="Node.js"></span> Node.js
+                        </button>
+                        <button class="tab-button" onclick="switchTab(event, 'products-python')">
+                            <span class="tab-icon"><img src="https://e7.pngegg.com/pngimages/119/113/png-clipart-computer-icons-python-programming-language-others-miscellaneous-angle.png" alt="Python"></span> Python
+                        </button>
+                    </div>
+                    
+                    <div id="products-curl" class="tab-content active">
+                        <div class="code">
+<span class="comment"># Obtener todos los productos</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  https://pruebas-api-l4yu.onrender.com/api/products
+
+<span class="comment"># Buscar por nombre</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/products?nombre=laptop"
+
+<span class="comment"># Buscar por SKU específico</span>
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/products?sku=SKU001"
+                        </div>
+                    </div>
+                    
+                    <div id="products-nodejs" class="tab-content">
+                        <div class="code">
+<span class="comment">// Obtener todos los productos</span>
+const axios = require('axios');
+
+const config = {
+  headers: { 'Authorization': 'Bearer YOUR_TOKEN' }
+};
+
+// Petición básica
+const products = await axios.get('https://pruebas-api-l4yu.onrender.com/api/products', config);
+
+// Buscar por nombre
+const laptops = await axios.get(
+  'https://pruebas-api-l4yu.onrender.com/api/products?nombre=laptop', 
+  config
+);
+
+// Buscar por SKU específico
+const product = await axios.get(
+  'https://pruebas-api-l4yu.onrender.com/api/products?sku=SKU001',
+  config
+);
+
+console.log(products.data);
+                        </div>
+                    </div>
+                    
+                    <div id="products-python" class="tab-content">
+                        <div class="code">
+<span class="comment"># Obtener todos los productos</span>
+import requests
+
+headers = {'Authorization': 'Bearer YOUR_TOKEN'}
+base_url = 'https://pruebas-api-l4yu.onrender.com/api'
+
+# Petición básica
+products = requests.get(f'{base_url}/products', headers=headers)
+
+# Buscar por nombre
+laptops = requests.get(
+    f'{base_url}/products?nombre=laptop', 
+    headers=headers
+)
+
+# Buscar por SKU específico
+product = requests.get(
+    f'{base_url}/products?sku=SKU001',
+    headers=headers
+)
+
+print(products.json())
+                        </div>
+                    </div>
+                </div>
+
+                <h4>📥 Respuesta Exitosa</h4>
+                <div class="response">
+                    <div class="code">
+{
+  "success": true,
+  "message": "Productos obtenidos exitosamente",
+  "data": [
+    {
+      "sku": "SKU001",
+      "nombre": "Laptop Dell Inspiron 15",
+      "descripcion": "Laptop Dell Inspiron 15 pulgadas, 8GB RAM, 256GB SSD"
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 1,
+    "totalItems": 11,
+    "itemsPerPage": 50,
+    "hasNextPage": false,
+    "hasPrevPage": false
+  },
+  "filters": {
+    "limit": 50,
+    "offset": 0
+  }
+}
+                    </div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3>🔍 Obtener Producto por SKU</h3>
+                <div>
+                    <span class="method get">GET</span>
+                    <span class="url">/api/products/{sku}</span>
+                </div>
+                <p><strong>Descripción:</strong> Obtiene los detalles de un producto específico usando su SKU.</p>
+                
+                <h4>📤 Ejemplo de Petición</h4>
+                <div class="code">
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  https://pruebas-api-l4yu.onrender.com/api/products/SKU001
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h3>✏️ Actualizar Producto</h3>
+                <div>
+                    <span class="method put">PUT</span>
+                    <span class="url">/api/products/{sku}</span>
+                </div>
+                <p><strong>Descripción:</strong> Actualiza el nombre y/o descripción de un producto específico.</p>
+                
+                <h4>📋 Body de la Petición</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Tipo</th>
+                            <th>Requerido</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="parameter">nombre</span></td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Nuevo nombre del producto (máx. 255 caracteres)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="parameter">descripcion</span></td>
+                            <td>string</td>
+                            <td>No</td>
+                            <td>Nueva descripción del producto (máx. 1000 caracteres)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>📤 Ejemplo de Petición</h4>
+                <div class="code">
+curl -X PUT \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Laptop Dell Inspiron 15 - Edición 2025",
+    "descripcion": "Nueva laptop con especificaciones mejoradas"
+  }' \
+  https://pruebas-api-l4yu.onrender.com/api/products/SKU001
+                </div>
+
+                <div class="info">
+                    <strong>💡 Nota:</strong> Puedes actualizar solo el nombre, solo la descripción, o ambos campos. Al menos uno debe estar presente en la petición.
+                </div>
+            </div>
+        </section>
+
+        <section id="filtros" class="page-break">
+            <h2>6. 🔍 Filtros y Parámetros Detallados</h2>
+            
+            <h3>📅 Filtros de Fecha</h3>
+            <p>Los filtros de fecha utilizan el formato ISO 8601 y pueden combinarse para crear rangos:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Combinación</th>
+                        <th>Descripción</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Solo <span class="parameter">fecha_inicial</span></td>
+                        <td>Órdenes desde esa fecha en adelante</td>
+                        <td>?fecha_inicial=2025-01-01</td>
+                    </tr>
+                    <tr>
+                        <td>Solo <span class="parameter">fecha_final</span></td>
+                        <td>Órdenes hasta esa fecha</td>
+                        <td>?fecha_final=2025-01-31</td>
+                    </tr>
+                    <tr>
+                        <td>Ambas fechas</td>
+                        <td>Órdenes dentro del rango</td>
+                        <td>?fecha_inicial=2025-01-01&fecha_final=2025-01-31</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🏪 Filtro de Plataforma</h3>
+            <p>El filtro de plataforma utiliza búsqueda parcial (ILIKE), por lo que puedes buscar:</p>
+            <ul>
+                <li><strong>Exacto:</strong> <code>?plataforma=AMAZON</code></li>
+                <li><strong>Parcial:</strong> <code>?plataforma=AMZ</code> (encontrará AMAZON)</li>
+                <li><strong>Case-insensitive:</strong> <code>?plataforma=amazon</code></li>
+            </ul>
+
+            <h3>📊 Paginación</h3>
+            <p>Todos los endpoints que devuelven listas soportan paginación:</p>
+            
+            <div class="code">
+<span class="comment"># Primera página (20 productos)</span>
+?limit=20&offset=0
+
+<span class="comment"># Segunda página (20 productos)</span>
+?limit=20&offset=20
+
+<span class="comment"># Tercera página (20 productos)</span>
+?limit=20&offset=40
+            </div>
+
+            <h3>🔗 Combinando Filtros</h3>
+            <p>Puedes combinar múltiples filtros en una sola petición:</p>
+            
+            <div class="code">
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?plataforma=AMAZON&fecha_inicial=2025-01-01&limit=10"
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Límites y Restricciones:</strong>
+                <ul>
+                    <li><strong>Límite máximo:</strong> 1000 registros por petición</li>
+                    <li><strong>Rate limit:</strong> 1 petición por segundo por IP</li>
+                    <li><strong>Timeout:</strong> 30 segundos por petición</li>
+                    <li><strong>Token expiry:</strong> 30 minutos</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="ejemplos" class="page-break">
+            <h2>7. 💡 Ejemplos Prácticos</h2>
+            
+            <h3>🚀 Flujo Completo de Uso</h3>
+            
+            <h4>Paso 1: Obtener Token</h4>
+            <div class="code">
+# Obtener token de acceso
+TOKEN=$(curl -s -X POST https://pruebas-api-l4yu.onrender.com/api/auth/token | jq -r '.data.access_token')
+echo "Token obtenido: $TOKEN"
+            </div>
+
+            <h4>Paso 2: Consultar Órdenes</h4>
+            <div class="code">
+# Obtener órdenes recientes
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?limit=5" | jq .
+            </div>
+
+            <h4>Paso 3: Filtrar por Plataforma</h4>
+            <div class="code">
+# Órdenes de Amazon del último mes
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?plataforma=AMAZON&fecha_inicial=2025-09-01" | jq .
+            </div>
+
+            <h4>Paso 4: Actualizar Estado</h4>
+            <div class="code">
+# Marcar orden como enviada
+curl -X PUT \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"estado": "enviado"}' \
+  https://pruebas-api-l4yu.onrender.com/api/orders/123 | jq .
+            </div>
+
+            <h3>📈 Casos de Uso Comunes</h3>
+            
+            <div class="endpoint">
+                <h4>🔍 Buscar Órdenes por ID</h4>
+                <div class="code">
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?id_venta=123"
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h4>📅 Órdenes del Día Actual</h4>
+                <div class="code">
+TODAY=$(date +%Y-%m-%d)
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders?fecha_inicial=${TODAY}&fecha_final=${TODAY}"
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h4>🛍️ Buscar Producto por Nombre</h4>
+                <div class="code">
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/products?nombre=laptop"
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <h4>📊 Exportar Datos para Reporte</h4>
+                <div class="code">
+curl -H "Authorization: Bearer $TOKEN" \
+  "https://pruebas-api-l4yu.onrender.com/api/orders/excel?fecha_inicial=2025-01-01&fecha_final=2025-01-31" \
+  > reporte_enero.json
+                </div>
+            </div>
+
+            <h3>🔄 Script de Automatización</h3>
+            <div class="code">
+#!/bin/bash
+
+<span class="comment"># Script para obtener reporte diario</span>
+API_BASE="https://pruebas-api-l4yu.onrender.com/api"
+TODAY=$(date +%Y-%m-%d)
+
+<span class="comment"># Obtener token</span>
+TOKEN=$(curl -s -X POST "$API_BASE/auth/token" | jq -r '.data.access_token')
+
+<span class="comment"># Obtener órdenes del día</span>
+curl -s -H "Authorization: Bearer $TOKEN" \
+  "$API_BASE/orders?fecha_inicial=$TODAY&fecha_final=$TODAY" \
+  | jq '.data | length' > ordenes_hoy.txt
+
+echo "Órdenes procesadas hoy: $(cat ordenes_hoy.txt)"
+            </div>
+        </section>
+
+        <section id="errores" class="page-break">
+            <h2>8. ⚠️ Manejo de Errores</h2>
+            
+            <h3>📋 Códigos de Estado HTTP</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Causa Común</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>200</strong></td>
+                        <td>Éxito</td>
+                        <td>Petición procesada correctamente</td>
+                    </tr>
+                    <tr>
+                        <td><strong>400</strong></td>
+                        <td>Bad Request</td>
+                        <td>Parámetros inválidos o faltantes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>401</strong></td>
+                        <td>Unauthorized</td>
+                        <td>Token faltante, inválido o expirado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>404</strong></td>
+                        <td>Not Found</td>
+                        <td>Recurso no encontrado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>429</strong></td>
+                        <td>Too Many Requests</td>
+                        <td>Rate limit excedido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>500</strong></td>
+                        <td>Internal Server Error</td>
+                        <td>Error del servidor</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🔍 Formato de Respuestas de Error</h3>
+            <div class="response">
+                <h4>Ejemplo de Error 401 (Token Expirado)</h4>
+                <div class="code">
+{
+  "success": false,
+  "message": "Token expirado",
+  "error": "El token ha caducado, solicite uno nuevo"
+}
+                </div>
+            </div>
+
+            <div class="response">
+                <h4>Ejemplo de Error 400 (Parámetros Inválidos)</h4>
+                <div class="code">
+{
+  "success": false,
+  "message": "Parámetros de consulta inválidos",
+  "error": "\"limit\" must be less than or equal to 1000"
+}
+                </div>
+            </div>
+
+            <div class="response">
+                <h4>Ejemplo de Error 429 (Rate Limit)</h4>
+                <div class="code">
+{
+  "success": false,
+  "message": "Demasiadas peticiones desde esta IP",
+  "error": "Por favor intente de nuevo más tarde"
+}
+                </div>
+            </div>
+
+            <h3>🛠️ Solución de Problemas Comunes</h3>
+            
+            <div class="warning">
+                <h4>❌ Error: "Token expirado"</h4>
+                <p><strong>Solución:</strong> Generar un nuevo token usando <code>POST /api/auth/token</code></p>
+            </div>
+
+            <div class="warning">
+                <h4>❌ Error: "Rate limit exceeded"</h4>
+                <p><strong>Solución:</strong> Esperar 1 segundo entre peticiones o implementar retry con backoff</p>
+            </div>
+
+            <div class="warning">
+                <h4>❌ Error: "Producto no encontrado"</h4>
+                <p><strong>Solución:</strong> Verificar que el SKU existe usando <code>GET /api/products</code></p>
+            </div>
+        </section>
+
+        <section id="testing" class="page-break">
+            <h2>9. 🧪 Herramientas de Prueba</h2>
+            
+            <h3>💻 Usando curl</h3>
+            <p>curl es la herramienta de línea de comandos más versátil para probar APIs:</p>
+            
+            <div class="code">
+<span class="comment"># Configurar variables</span>
+export API_BASE="https://pruebas-api-l4yu.onrender.com/api"
+export TOKEN="your_token_here"
+
+<span class="comment"># Función helper para peticiones autenticadas</span>
+api_get() {
+  curl -H "Authorization: Bearer $TOKEN" "$API_BASE/$1"
+}
+
+<span class="comment"># Uso</span>
+api_get "products?limit=5"
+            </div>
+
+            <h3>📱 Usando Postman</h3>
+            <ol>
+                <li>Crear una nueva colección "Ecommerce API"</li>
+                <li>Configurar variable de entorno <code>{{base_url}}</code> = <code>https://pruebas-api-l4yu.onrender.com/api</code></li>
+                <li>Configurar variable de entorno <code>{{token}}</code> con tu JWT</li>
+                <li>Agregar header global: <code>Authorization: Bearer {{token}}</code></li>
+            </ol>
+
+            <h3>🔧 Health Check</h3>
+            <p>Siempre puedes verificar que la API esté funcionando:</p>
+            <div class="code">
+curl https://pruebas-api-l4yu.onrender.com/api/health
+            </div>
+
+            <h3>📊 Collection de Postman</h3>
+            <div class="info">
+                <p>Se incluye una collection de Postman pre-configurada con todos los endpoints en el archivo <code>postman-collection.json</code> del proyecto.</p>
+                <p><strong>Para importar:</strong></p>
+                <ol>
+                    <li>Abrir Postman</li>
+                    <li>File → Import</li>
+                    <li>Seleccionar <code>postman-collection.json</code></li>
+                    <li>Configurar variables de entorno</li>
+                </ol>
+            </div>
+
+            <h3>🐛 Debug y Logging</h3>
+            <p>La API incluye logging detallado que puedes monitorear en la consola del servidor:</p>
+            <ul>
+                <li>🔵 <strong>Azul:</strong> Peticiones entrantes</li>
+                <li>📗 <strong>Verde:</strong> Operaciones exitosas</li>
+                <li>🔴 <strong>Rojo:</strong> Errores</li>
+                <li>🟡 <strong>Amarillo:</strong> Advertencias</li>
+            </ul>
+        </section>
+
+        <div class="footer">
+            <p><strong>🛒 API Ecommerce v1.0.0</strong></p>
+            <p>Documentación generada el <strong>Octubre 2025</strong></p>
+            <p>Para soporte técnico o consultas, contacta al equipo de desarrollo.</p>
+        </div>
+    </div>
+
+    <script>
+        // Función para formatear JSON con syntax highlighting
+        function formatJSON(jsonString) {
+            try {
+                // Intentar parsear el JSON
+                const parsed = JSON.parse(jsonString);
+                // Convertir de vuelta a string con formato bonito
+                const formatted = JSON.stringify(parsed, null, 2);
+                
+                // Aplicar syntax highlighting
+                return formatted
+                    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?)/g, function(match) {
+                        if (/:$/.test(match)) {
+                            // Es una clave
+                            return '<span class="json-key">' + match + '</span>';
+                        } else {
+                            // Es un string value
+                            return '<span class="json-string">' + match + '</span>';
+                        }
+                    })
+                    .replace(/\b\d+\.?\d*\b/g, '<span class="json-number">$&</span>')
+                    .replace(/\b(true|false)\b/g, '<span class="json-boolean">$&</span>')
+                    .replace(/\bnull\b/g, '<span class="json-null">$&</span>')
+                    .replace(/([{}[\],])/g, '<span class="json-punctuation">$&</span>');
+            } catch (e) {
+                // Si no es JSON válido, devolver el texto original
+                return jsonString;
+            }
+        }
+
+        // Función para detectar si el contenido es JSON
+        function isJSON(str) {
+            try {
+                JSON.parse(str.trim());
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Formatear todos los bloques de código que contengan JSON
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.code');
+            
+            codeBlocks.forEach(function(block) {
+                const content = block.textContent.trim();
+                
+                // Solo formatear si es JSON válido y empieza con { o [
+                if (isJSON(content) && (content.startsWith('{') || content.startsWith('['))) {
+                    const formatted = formatJSON(content);
+                    block.innerHTML = formatted;
+                    
+                    // Agregar un indicador visual de que es JSON
+                    if (!block.querySelector('.json-label')) {
+                        const label = document.createElement('div');
+                        label.className = 'json-label';
+                        label.style.cssText = `
+                            position: absolute;
+                            top: 5px;
+                            right: 10px;
+                            background: #4a5568;
+                            color: #e2e8f0;
+                            padding: 2px 8px;
+                            border-radius: 4px;
+                            font-size: 10px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                        `;
+                        label.textContent = 'JSON';
+                        block.style.position = 'relative';
+                        block.appendChild(label);
+                    }
+                }
+            });
+        });
+
+        // Función para cambiar tabs
+        function switchTab(event, tabId) {
+            event.preventDefault();
+            
+            // Obtener el contenedor padre de tabs
+            const tabContainer = event.target.closest('.example-tabs');
+            
+            // Remover clase active de todos los botones en este contenedor
+            const tabButtons = tabContainer.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            // Remover clase active de todos los contenidos en este contenedor
+            const tabContents = tabContainer.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Agregar clase active al botón clickeado
+            event.target.classList.add('active');
+            
+            // Mostrar el contenido correspondiente
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+        }
+
+        // Función para copiar código al clipboard
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.querySelector('.code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                const originalText = button.textContent;
+                button.textContent = '✅ Copiado!';
+                button.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(function() {
+                alert('Error al copiar el código');
+            });
+        }
+
+        // Verificar autenticación al cargar
+        window.addEventListener('load', function() {
+            const token = sessionStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+        });
+
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                sessionStorage.removeItem('authToken');
+                sessionStorage.removeItem('apiCredentials');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+    
+    <!-- Scripts externos -->
+    <script src="js/auth.js"></script>
+    <script src="js/documentacion.js"></script>
+        </div>
+    </div>
+</body>
+</html>
